@@ -4,45 +4,63 @@ import org.springframework.http.ResponseEntity;
 
 public interface BaseResponse {
 
-    default <T> ResponseEntity<BodyResponse<T>> ok(T body) {
+    default <T> ResponseEntity<ApiResponseBody<T>> ok(T body) {
         return ResponseEntity
                 .status(NordHttpEnum.HTTP_200.getStatus())
-                .body(new BodyResponse<>(NordHttpEnum.HTTP_200, body));
+                .body(new ApiResponseBody<>(
+                        NordHttpEnum.HTTP_200,
+                        NordHttpEnum.HTTP_200.getMensagem(),
+                        body
+                ));
     }
 
-    default <T> ResponseEntity<BodyResponse<T>> created(T body) {
+    default <T> ResponseEntity<ApiResponseBody<T>> created(T body) {
         return ResponseEntity
                 .status(NordHttpEnum.HTTP_201.getStatus())
-                .body(new BodyResponse<>(NordHttpEnum.HTTP_201, body));
+                .body(new ApiResponseBody<>(
+                        NordHttpEnum.HTTP_201,
+                        NordHttpEnum.HTTP_201.getMensagem(),
+                        body
+                ));
     }
 
-    default ResponseEntity<BodyResponse<Void>> noContent() {
+    default ResponseEntity<ApiResponseBody<Void>> noContent() {
         return ResponseEntity
                 .status(NordHttpEnum.HTTP_204.getStatus())
-                .body(new BodyResponse<>(NordHttpEnum.HTTP_204, null));
+                .body(new ApiResponseBody<>(
+                        NordHttpEnum.HTTP_204,
+                        NordHttpEnum.HTTP_204.getMensagem(),
+                        null
+                ));
     }
 
-    default ResponseEntity<BodyResponse<Void>> badRequest(String mensagem) {
+    default ResponseEntity<ApiResponseBody<Void>> badRequest(String mensagem) {
         return ResponseEntity
                 .status(NordHttpEnum.HTTP_400.getStatus())
-                .body(
-                        BodyResponse.<Void>builder()
-                                .timestamp(java.time.LocalDateTime.now())
-                                .nrStatus(NordHttpEnum.HTTP_400.getStatus().value())
-                                .txMensagem(mensagem)
-                                .build()
-                );
+                .body(new ApiResponseBody<>(
+                        NordHttpEnum.HTTP_400,
+                        mensagem,
+                        null
+                ));
     }
 
-    default ResponseEntity<BodyResponse<Void>> notFound() {
+    default ResponseEntity<ApiResponseBody<Void>> notFound() {
         return ResponseEntity
                 .status(NordHttpEnum.HTTP_404.getStatus())
-                .body(new BodyResponse<>(NordHttpEnum.HTTP_404, null));
+                .body(new ApiResponseBody<>(
+                        NordHttpEnum.HTTP_404,
+                        NordHttpEnum.HTTP_404.getMensagem(),
+                        null
+                ));
     }
 
-    default ResponseEntity<BodyResponse<Void>> internalError() {
+    default ResponseEntity<ApiResponseBody<Void>> internalError() {
         return ResponseEntity
                 .status(NordHttpEnum.HTTP_500.getStatus())
-                .body(new BodyResponse<>(NordHttpEnum.HTTP_500, null));
+                .body(new ApiResponseBody<>(
+                        NordHttpEnum.HTTP_500,
+                        NordHttpEnum.HTTP_500.getMensagem(),
+                        null
+                ));
     }
 }

@@ -1,6 +1,6 @@
 package br.com.nord_tool_backend.controller;
 
-import br.com.nord_tool_backend.controller.response.BodyResponse;
+import br.com.nord_tool_backend.controller.response.ApiResponseBody;
 import br.com.nord_tool_backend.controller.response.BaseResponse;
 import br.com.nord_tool_backend.dto.DiaSemanaDto;
 import br.com.nord_tool_backend.service.DiaSemanaService;
@@ -24,7 +24,7 @@ public class DiaSemanaController implements BaseResponse {
 
     @Operation(summary = "Lista os dias da semana")
     @GetMapping("/diaSemana")
-    public ResponseEntity<BodyResponse<List<DiaSemanaDto>>> listaDiaSemana() {
+    public ResponseEntity<ApiResponseBody<List<DiaSemanaDto>>> listaDiaSemana() {
         return ok(diaSemanaService.listarDiaSemana());
     }
 }

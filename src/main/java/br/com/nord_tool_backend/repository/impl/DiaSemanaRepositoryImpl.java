@@ -1,5 +1,6 @@
 package br.com.nord_tool_backend.repository.impl;
 
+import br.com.nord_tool_backend.controller.response.NordHttpEnum;
 import br.com.nord_tool_backend.domain.DiaSemana;
 import br.com.nord_tool_backend.excepetion.ValidacaoException;
 import br.com.nord_tool_backend.repository.DiaSemanaRepository;
@@ -28,9 +29,9 @@ public class DiaSemanaRepositoryImpl extends RepositoryJdbcOperationsSql<DiaSema
     public List<DiaSemana> listarDiaSemana (){
         try {
             return buscarTodos(queryListarTodosDiaSemana, BeanPropertyRowMapper.newInstance(DiaSemana.class));
-        } catch (Exception e) {
-            log.error(ExceptionUtils.getMessage(e));
-            throw new ValidacaoException(StringUtils.getMensagem(LISTAR_ERRO_GENERICO));
+        } catch (Exception ex) {
+            log.error(ExceptionUtils.getMessage(ex));
+            throw new ValidacaoException(NordHttpEnum.HTTP_400, StringUtils.getMensagem(LISTAR_ERRO_GENERICO), ex.getMessage());
         }
     }
 }

@@ -11,17 +11,17 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BodyResponse<T> {
+public class ApiResponseBody<T> {
     private static final long serialVersionUID = 1L;
     private LocalDateTime timestamp;
     private Integer nrStatus;
     private transient T body;
     private String txMensagem;
 
-    public BodyResponse(final NordHttpEnum status, final T body) {
+    public ApiResponseBody(NordHttpEnum status, String menssage, final T body) {
         this.timestamp = LocalDateTime.now();
         this.nrStatus = status.getStatus().value();
-        this.txMensagem = status.getMensagem();
+        this.txMensagem = menssage;
         this.body = body;
     }
 }

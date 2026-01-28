@@ -35,12 +35,12 @@ public class StatusVistoriaServiceImplTest {
     @BeforeEach
     public void setup() {
         lsStatusVistoria.add(StatusVistoria.builder()
-                .idStatusVistoria(1)
+                .id(1L)
                 .nmStatusVistoria("Pendente")
                 .build());
 
         lsStatusVistoriaDto.add(StatusVistoriaDto.builder()
-                .idStatusVistoria(1)
+                .idStatusVistoria(1L)
                 .nmStatusVistoria("Pendente")
                 .build());
     }

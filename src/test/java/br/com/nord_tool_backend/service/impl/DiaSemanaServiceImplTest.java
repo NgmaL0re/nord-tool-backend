@@ -33,12 +33,12 @@ class DiaSemanaServiceImplTest {
     @BeforeEach
     public void setup() {
         lsDiaSemana.add(DiaSemana.builder()
-                .idDiaSemana(1)
+                .id(1L)
                 .nmDiaSemana("Segunda-Feira")
                 .build());
 
         lsDiaSemanaDto.add(DiaSemanaDto.builder()
-                .idDiaSemana(1)
+                .idDiaSemana(1L)
                 .nmDiaSemana("Segunda-Feira")
                 .build());
     }

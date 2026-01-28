@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @ToString
@@ -15,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StatusVistoria {
-    private Integer idStatusVistoria;
+public class StatusVistoria extends GlobalDomain implements Serializable {
+    private Long id;
     private String nmStatusVistoria;
 }

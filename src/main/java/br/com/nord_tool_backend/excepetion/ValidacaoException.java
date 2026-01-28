@@ -23,7 +23,7 @@ public class ValidacaoException extends RuntimeException {
         return menssage;
     }
 
-    public String getEx() {
+    public String getException() {
         return ex;
     }
 }

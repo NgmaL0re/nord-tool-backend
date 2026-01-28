@@ -1,10 +1,10 @@
 package br.com.nord_tool_backend.repository.impl;
 
 import br.com.nord_tool_backend.controller.response.NordHttpEnum;
-import br.com.nord_tool_backend.domain.DiaSemana;
+import br.com.nord_tool_backend.domain.StatusVistoria;
 import br.com.nord_tool_backend.excepetion.ValidacaoException;
-import br.com.nord_tool_backend.repository.DiaSemanaRepository;
 import br.com.nord_tool_backend.repository.RepositoryJdbcOperationsSql;
+import br.com.nord_tool_backend.repository.StatusVistoriaRepository;
 import br.com.nord_tool_backend.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -17,18 +17,18 @@ import java.util.List;
 
 @Repository
 @Slf4j
-@PropertySource("classpath:query/dia-semana.properties")
-public class DiaSemanaRepositoryImpl extends RepositoryJdbcOperationsSql<DiaSemana> implements DiaSemanaRepository {
+@PropertySource("classpath:query/status-vistoria.properties")
+public class StatusVistoriaRepositoryImpl extends RepositoryJdbcOperationsSql<StatusVistoria> implements StatusVistoriaRepository {
 
-    private static final String LISTAR_ERRO_GENERICO = "Erro ao listar os dados da tabela Dia semana";
+    private static final String LISTAR_ERRO_GENERICO = "Erro ao listar os dados da tabela Status Vistoria";
 
-    @Value("${SPS.LISTAR_TODOS_DIA_SEMANA}")
-    private String queryListarTodosDiaSemana;
+    @Value("${SPS.LISTAR_TODOS_STATUS_VISTORIA}")
+    private String queryListarStatusVistoria;
 
     @Override
-    public List<DiaSemana> listarDiaSemana (){
+    public List<StatusVistoria> listarStatusVistoria (){
         try {
-            return buscarTodos(queryListarTodosDiaSemana, BeanPropertyRowMapper.newInstance(DiaSemana.class));
+            return buscarTodos(queryListarStatusVistoria, BeanPropertyRowMapper.newInstance(StatusVistoria.class));
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));
             throw new ValidacaoException(NordHttpEnum.HTTP_400, StringUtils.getMensagem(LISTAR_ERRO_GENERICO), ex.getMessage());

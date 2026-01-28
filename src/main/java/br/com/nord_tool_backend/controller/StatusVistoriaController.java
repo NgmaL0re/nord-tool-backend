@@ -2,8 +2,8 @@ package br.com.nord_tool_backend.controller;
 
 import br.com.nord_tool_backend.controller.response.ApiResponseBody;
 import br.com.nord_tool_backend.controller.response.BaseResponse;
-import br.com.nord_tool_backend.dto.DiaSemanaDto;
-import br.com.nord_tool_backend.service.DiaSemanaService;
+import br.com.nord_tool_backend.dto.StatusVistoriaDto;
+import br.com.nord_tool_backend.service.StatusVistoriaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +17,14 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/nord-tool")
-@Tag(name = "Dia Semana", description = "Endpoint para listar os dias da semana")
-public class DiaSemanaController implements BaseResponse {
+@Tag(name = "Status Vistoria", description = "Endpoint para listar os status de vistoria dos apartamentos")
+public class StatusVistoriaController implements BaseResponse {
 
-    private final DiaSemanaService diaSemanaService;
+    private final StatusVistoriaService statusVistoriaService;
 
-    @Operation(summary = "Lista os dias da semana")
-    @GetMapping("/diaSemana")
-    public ResponseEntity<ApiResponseBody<List<DiaSemanaDto>>> listaDiaSemana() {
-        return ok(diaSemanaService.listarDiaSemana());
+    @Operation(summary = "Lista os Status de vistoria")
+    @GetMapping("/statusVistoria")
+    public ResponseEntity<ApiResponseBody<List<StatusVistoriaDto>>> listarStatusVistoria() {
+        return ok(statusVistoriaService.listarStatusVistoria());
     }
 }

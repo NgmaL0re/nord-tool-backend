@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController {
 
     @GetMapping("/health")
-    @Operation(summary = "Testa a se aplicação está funcionando normalmente")
+    @Operation(summary = "Testa se aplicação está funcionando normalmente")
     public HealthDto getCliente() {
         HealthDto health = new HealthDto();
         health.setMessage("Retornando com sucesso");

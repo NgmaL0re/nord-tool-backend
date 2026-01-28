@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
                         new ApiResponseBody<>(
                                 status,
                                 ex.getMenssage(),
-                                ex.getEx()
+                                ex.getException()
                         )
                 );
     }

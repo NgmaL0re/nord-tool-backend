@@ -1,7 +1,11 @@
 package br.com.nord_tool_backend.dto;
 
 import br.com.nord_tool_backend.domain.DiaSemana;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -13,12 +17,12 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class DiaSemanaDto implements Serializable {
 
-    private Integer idDiaSemana;
+    private Long idDiaSemana;
     private String nmDiaSemana;
 
     public static DiaSemanaDto converterToDomain(DiaSemana diaSemana ) {
         return DiaSemanaDto.builder()
-                .idDiaSemana(diaSemana.getIdDiaSemana())
+                .idDiaSemana(diaSemana.getId())
                 .nmDiaSemana(diaSemana.getNmDiaSemana())
                 .build();
     }

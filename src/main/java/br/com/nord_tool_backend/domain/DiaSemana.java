@@ -11,8 +11,8 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DiaSemana implements Serializable {
+public class DiaSemana extends GlobalDomain implements Serializable {
 
-    private Integer idDiaSemana;
+    private Long id;
     private String nmDiaSemana;
 }

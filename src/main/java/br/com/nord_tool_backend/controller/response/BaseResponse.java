@@ -24,7 +24,7 @@ public interface BaseResponse {
                 ));
     }
 
-    default ResponseEntity<ApiResponseBody<Void>> noContent() {
+    default <T> ResponseEntity<ApiResponseBody<T>> noContent() {
         return ResponseEntity
                 .status(NordHttpEnum.HTTP_204.getStatus())
                 .body(new ApiResponseBody<>(
@@ -34,7 +34,7 @@ public interface BaseResponse {
                 ));
     }
 
-    default ResponseEntity<ApiResponseBody<Void>> badRequest(String mensagem) {
+    default <T> ResponseEntity<ApiResponseBody<T>> badRequest(String mensagem) {
         return ResponseEntity
                 .status(NordHttpEnum.HTTP_400.getStatus())
                 .body(new ApiResponseBody<>(
@@ -44,7 +44,7 @@ public interface BaseResponse {
                 ));
     }
 
-    default ResponseEntity<ApiResponseBody<Void>> notFound() {
+    default <T> ResponseEntity<ApiResponseBody<T>> notFound() {
         return ResponseEntity
                 .status(NordHttpEnum.HTTP_404.getStatus())
                 .body(new ApiResponseBody<>(

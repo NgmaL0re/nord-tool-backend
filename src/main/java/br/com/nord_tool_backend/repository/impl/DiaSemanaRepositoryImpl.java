@@ -28,6 +28,7 @@ public class DiaSemanaRepositoryImpl extends RepositoryJdbcOperationsSql<DiaSema
     @Override
     public List<DiaSemana> listarDiaSemana (){
         try {
+            log.info("Listando todos os Dias da Semana da base de dados");
             return buscarTodos(queryListarTodosDiaSemana, BeanPropertyRowMapper.newInstance(DiaSemana.class));
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));

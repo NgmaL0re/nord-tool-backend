@@ -5,9 +5,12 @@ import br.com.nord_tool_backend.domain.StatusVistoria;
 import br.com.nord_tool_backend.excepetion.ValidacaoException;
 import br.com.nord_tool_backend.repository.RepositoryJdbcOperationsSql;
 import br.com.nord_tool_backend.repository.StatusVistoriaRepository;
+import br.com.nord_tool_backend.service.impl.StatusVistoriaServiceImpl;
 import br.com.nord_tool_backend.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -28,6 +31,7 @@ public class StatusVistoriaRepositoryImpl extends RepositoryJdbcOperationsSql<St
     @Override
     public List<StatusVistoria> listarStatusVistoria (){
         try {
+            log.info("Listando todos os Status Vistoria da base de dados");
             return buscarTodos(queryListarStatusVistoria, BeanPropertyRowMapper.newInstance(StatusVistoria.class));
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));

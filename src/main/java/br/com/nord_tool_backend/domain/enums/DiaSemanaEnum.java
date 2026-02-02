@@ -24,7 +24,6 @@ public enum DiaSemanaEnum {
         if (value == null || value.isBlank()) {
             return SEM_AGENDAMENTO.getId();
         }
-
         String normalizedValue = normalizeDiaSemana(value);
 
         return Arrays.stream(values())

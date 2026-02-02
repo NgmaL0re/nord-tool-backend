@@ -47,6 +47,7 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
     @Override
     public ApartamentoVistoriaDto salvarApartamentoVistoria(ApartamentoVistoria apartamentoVistoria) {
         try {
+            log.info("Salvando na base de dados um Apartamento Vistoria");
             ApartamentoVistoria apartamentoVistoriaSalvar = salvar(querySalvarApartamentoVistoria, apartamentoVistoria, "id_apartamento_vistoria");
             return ApartamentoVistoriaDto.converterToDomain(apartamentoVistoriaSalvar);
         } catch (Exception ex) {
@@ -58,6 +59,7 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
     @Override
     public ApartamentoVistoriaDto alterarApartamentoVistoria(ApartamentoVistoria apartamentoVistoria) {
         try {
+            log.info("Alterando na base de dados um Apartamento Vistoria");
             ApartamentoVistoria apartamentoVistoriaAlterar = alterar(queryAlterarApartamentoVistoria, apartamentoVistoria);
             return ApartamentoVistoriaDto.converterToDomain(apartamentoVistoriaAlterar);
         } catch (Exception ex) {
@@ -70,6 +72,7 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
     public void deletarApartamentoVistoria(Long id) {
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         try {
+            log.info("Apagando na base de dados um Apartamento Vistoria");
             deletar(queryDeletarApartamentoVistoria, params);
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));
@@ -81,6 +84,7 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
     public ApartamentoVistoria buscarApartamentoVistoria(Long id) {
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         try {
+            log.info("Buscando na base de dados um Apartamento Vistoria");
             return buscarPorId(queryBuscarApartamentoVistoria, params, BeanPropertyRowMapper.newInstance(ApartamentoVistoria.class));
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));
@@ -91,6 +95,7 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
     @Override
     public List<ApartamentoVistoria> listarApartamentoVistoria() {
         try {
+            log.info("Listando na base de dados Apartamentos Vistoria");
             return buscarTodos(queryListarApartamentoVistoria, BeanPropertyRowMapper.newInstance(ApartamentoVistoria.class));
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));
@@ -101,6 +106,7 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
     @Override
     public void salvarEmLote(List<ApartamentoVistoria> lsApartamentoVistoria) {
         try {
+            log.info("Salvando dados da planilha de apartamentos em lote na base de dados");
             salvarTodos(querySalvarApartamentoVistoria, lsApartamentoVistoria);
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));

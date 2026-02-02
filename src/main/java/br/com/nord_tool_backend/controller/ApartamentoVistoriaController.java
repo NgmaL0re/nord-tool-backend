@@ -25,49 +25,49 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/nord-tool")
+@RequestMapping("/api/v1/nord-tool/apartamentoVistoria")
 @Tag(name = "Apartamento Vistoria", description = "Endpoints para listar, buscar e manipular os apartamentos retornados")
 public class ApartamentoVistoriaController implements BaseResponse {
 
     private final ApartamentoVistoriaService apartamentoVistoriaService;
 
     @Operation(summary = "Cria os apartamentos em vistoria")
-    @PostMapping("/apartamentoVistoria")
+    @PostMapping
     public ResponseEntity<ApiResponseBody<ApartamentoVistoriaDto>> criarApartamentoVistoria(@Valid @RequestBody ApartamentoVistoriaForm apartamentoVistoriaForm) {
         ApartamentoVistoriaDto apartamentoVistoriaDto = this.apartamentoVistoriaService.salvarApartamentoVistoria(apartamentoVistoriaForm);
         return created(apartamentoVistoriaDto);
     }
 
     @Operation(summary = "Editar os apartamentos em vistoria")
-    @PutMapping("/apartamentoVistoria")
+    @PutMapping
     public ResponseEntity<ApiResponseBody<ApartamentoVistoriaDto>> alterarApartamentoVistoria(@Valid @RequestBody ApartamentoVistoriaForm apartamentoVistoriaForm) {
         ApartamentoVistoriaDto apartamentoVistoriaDto = this.apartamentoVistoriaService.alterarApartamentoVistoria(apartamentoVistoriaForm);
         return ok(apartamentoVistoriaDto);
     }
 
     @Operation(summary = "Excluir os apartamentos em vistoria")
-    @DeleteMapping("/apartamentoVistoria/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponseBody<Void>> deletarApartamentoVistoria(@PathVariable("id") Long id) {
         this.apartamentoVistoriaService.deletarApartamentoVistoria(id);
         return noContent();
     }
 
     @Operation(summary = "Buscar um apartamento em vistoria")
-    @GetMapping("/apartamentoVistoria/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ApiResponseBody<ApartamentoVistoriaDto>> buscarApartamentoVistoria(@PathVariable("id") Long id) {
         ApartamentoVistoriaDto apartamentoVistoriaDto = this.apartamentoVistoriaService.buscarApartamentoVistoria(id);
         return ok(apartamentoVistoriaDto);
     }
 
     @Operation(summary = "Listar todos os apartamento em vistoria")
-    @GetMapping("/apartamentoVistoria")
+    @GetMapping
     public ResponseEntity<ApiResponseBody<List<ApartamentoVistoriaDto>>> listarApartamentoVistoria() {
         List<ApartamentoVistoriaDto> apartamentoVistoriaDto = this.apartamentoVistoriaService.listarApartamentoVistoria();
         return ok(apartamentoVistoriaDto);
     }
 
     @Operation(summary = "Importar planilha de apartamentos para vistoria")
-    @PostMapping("/apartamentoVistoria/importar")
+    @PostMapping("/importar")
     public ResponseEntity<ApiResponseBody<String>> importar(@RequestParam("planilha") MultipartFile planilha) throws Exception {
         apartamentoVistoriaService.importarPlanilha(planilha);
         return ok("Planilha importada com sucesso");

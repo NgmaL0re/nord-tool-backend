@@ -23,7 +23,6 @@ public enum StatusVistoriaEnum {
 
     public static Integer getStatusVistoria(String value) {
         if (value == null || value.isBlank()) return null;
-
         String normalizedValue = normalizeStatusVistoria(value);
 
         return Arrays.stream(values())

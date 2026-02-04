@@ -1,7 +1,9 @@
 package br.com.nord_tool_backend.service.impl;
 
 import br.com.nord_tool_backend.domain.ApartamentoVistoria;
+import br.com.nord_tool_backend.domain.enums.ApartamentoVistoriaFiltroEnum;
 import br.com.nord_tool_backend.dto.ApartamentoVistoriaDto;
+import br.com.nord_tool_backend.dto.ApartamentoVistoriaFiltroDto;
 import br.com.nord_tool_backend.form.ApartamentoVistoriaForm;
 import br.com.nord_tool_backend.handler.XlsxExtractorHandlerApartamento;
 import br.com.nord_tool_backend.repository.ApartamentoVistoriaRepository;
@@ -9,6 +11,7 @@ import br.com.nord_tool_backend.service.ApartamentoVistoriaService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +25,9 @@ public class ApartamentoVistoriaServiceImpl extends XlsxExtractorHandlerApartame
 
     @Autowired
     private ApartamentoVistoriaRepository apartamentoVistoriaRepository;
+
+    @Autowired
+    public Environment env;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -74,6 +80,20 @@ public class ApartamentoVistoriaServiceImpl extends XlsxExtractorHandlerApartame
     public void importarPlanilha(MultipartFile arquivo) throws Exception {
         log.info("Iniciando método para importar planilha de Apartamentos Vistoria");
         init(arquivo);
+    }
+
+    @Override
+    public List<ApartamentoVistoriaDto> listarApartamentoVistoriaFiltrado(ApartamentoVistoriaFiltroDto apartamentoVistoriaFiltroDto, String filtraTodos, int nrPagina, int nrQuantidadePorPagina, String nmOrdenacao) {
+        nmOrdenacao = (nmOrdenacao == null) ? "" : nmOrdenacao;
+        String query;
+
+        if (filtraTodos != null && !filtraTodos.isEmpty()) {
+            query = env.getProperty((ApartamentoVistoriaFiltroEnum.QUERY_TODOS.getQueryProperty())) + ApartamentoVistoriaFiltroEnum.QUERY_TODOS.getSort(nmOrdenacao);
+        } else {
+            query = env.getProperty((ApartamentoVistoriaFiltroEnum.QUERY_WHERE.getQueryProperty())) + ApartamentoVistoriaFiltroEnum.QUERY_WHERE.getSort(nmOrdenacao);
+        }
+        List<ApartamentoVistoriaDto> lsApartamentoVistoriaDto = apartamentoVistoriaRepository.listarApartamentoVistoriaFiltrado(query,apartamentoVistoriaFiltroDto, filtraTodos, nrPagina,nrQuantidadePorPagina);
+        return lsApartamentoVistoriaDto;
     }
 
 }

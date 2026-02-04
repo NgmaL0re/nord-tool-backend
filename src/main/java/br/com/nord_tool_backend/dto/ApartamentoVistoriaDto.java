@@ -28,6 +28,7 @@ public class ApartamentoVistoriaDto implements Serializable{
     private boolean inMarcarRevistoria;
     private String txObservacaoRevistoria;
     private LocalDate dtRevistoriaVigente;
+    private Integer nrTotalRegistros;
 
     public static ApartamentoVistoriaDto converterToDomain(ApartamentoVistoria apartamentoVistoria ) {
         return ApartamentoVistoriaDto.builder()

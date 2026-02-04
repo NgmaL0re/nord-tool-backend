@@ -48,4 +48,8 @@ public abstract class RepositoryJdbcOperationsSql<T extends GlobalDomain> {
     protected <T> T buscarPorId(String sql, MapSqlParameterSource params, BeanPropertyRowMapper<T> mapper) {
         return namedParameterJdbcTemplate.queryForObject(sql, params, mapper);
     }
+
+    protected<T> List<T> buscarTodosPorFiltro(String sql, MapSqlParameterSource params, BeanPropertyRowMapper<T> mapper) {
+        return namedParameterJdbcTemplate.query(sql, params, mapper);
+    }
 }

@@ -4,6 +4,7 @@ import br.com.nord_tool_backend.controller.response.NordHttpEnum;
 import br.com.nord_tool_backend.domain.ApartamentoVistoria;
 import br.com.nord_tool_backend.domain.DiaSemana;
 import br.com.nord_tool_backend.dto.ApartamentoVistoriaDto;
+import br.com.nord_tool_backend.dto.ApartamentoVistoriaFiltroDto;
 import br.com.nord_tool_backend.excepetion.ValidacaoException;
 import br.com.nord_tool_backend.repository.ApartamentoVistoriaRepository;
 import br.com.nord_tool_backend.repository.RepositoryJdbcOperationsSql;
@@ -16,6 +17,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Types;
 import java.util.List;
 
 @Repository
@@ -43,6 +45,9 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
 
     @Value("${SPS.LISTAR.APARTAMENTO_VISTORIA}")
     private String queryListarApartamentoVistoria;
+
+    @Value("${SPS.APARTAMENTO_VISTORIA_PAGINACAO}")
+    private String queryPaginacao;
 
     @Override
     public ApartamentoVistoriaDto salvarApartamentoVistoria(ApartamentoVistoria apartamentoVistoria) {
@@ -111,6 +116,34 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));
             throw new ValidacaoException(NordHttpEnum.HTTP_400, StringUtils.getMensagem(ERRO_GENERICO_SALVAR), ex.getMessage());
+        }
+    }
+
+    @Override
+    public List<ApartamentoVistoriaDto> listarApartamentoVistoriaFiltrado(String query, ApartamentoVistoriaFiltroDto apartamentoVistoriaFiltroDto, String filtraTodos, int nrPagina, int nrQuantidadePorPagina) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+
+        if (filtraTodos != null && !filtraTodos.isEmpty()) {
+            mapSqlParameterSource.addValue("filtraTodos", "%".concat(filtraTodos).concat("%"));
+        }
+        mapSqlParameterSource.addValue("nmApartamentoVistoria", apartamentoVistoriaFiltroDto.getNmApartamentoVistoria(), Types.VARCHAR);
+        mapSqlParameterSource.addValue("nmDiaSemana", apartamentoVistoriaFiltroDto.getNmDiaSemana(), Types.VARCHAR);
+        mapSqlParameterSource.addValue("dtApartamentoVigente", apartamentoVistoriaFiltroDto.getDtApartamentoVigente(), Types.DATE);
+        mapSqlParameterSource.addValue("nmHorarioVistoria", apartamentoVistoriaFiltroDto.getNmHorarioVistoria(), Types.VARCHAR);
+        mapSqlParameterSource.addValue("nmStatusVistoria", apartamentoVistoriaFiltroDto.getNmStatusVistoria(), Types.VARCHAR);
+        mapSqlParameterSource.addValue("txObservacaoRevistoria", apartamentoVistoriaFiltroDto.getTxObservacaoRevistoria(), Types.VARCHAR);
+        mapSqlParameterSource.addValue("dtRevistoriaVigente", apartamentoVistoriaFiltroDto.getDtRevistoriaVigente(), Types.DATE);
+
+        mapSqlParameterSource.addValue("nrPagina", nrPagina * nrQuantidadePorPagina);
+        mapSqlParameterSource.addValue("nrQuantidadePorPagina", nrQuantidadePorPagina);
+
+        String sql = query + queryPaginacao;
+        try {
+            log.info("Listando da base de dados os Apartamentos Vistoria filtrados");
+            return buscarTodosPorFiltro(sql, mapSqlParameterSource, BeanPropertyRowMapper.newInstance(ApartamentoVistoriaDto.class));
+        } catch (Exception ex) {
+            log.error(ExceptionUtils.getMessage(ex));
+            throw new ValidacaoException(NordHttpEnum.HTTP_400, StringUtils.getMensagem(ERRO_GENERICO_LISTAR), ex.getMessage());
         }
     }
 }

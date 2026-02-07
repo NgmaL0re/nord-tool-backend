@@ -1,34 +1,34 @@
 package br.com.nord_tool_backend.dto;
 
 import br.com.nord_tool_backend.domain.ApartamentoVistoria;
-import com.fasterxml.jackson.annotation.JsonInclude;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApartamentoVistoriaDto implements Serializable{
+public class ApartamentoVistoriaDto {
 
     private Long idApartamentoVistoria;
     private String nmApartamentoVistoria;
     private Integer idDiaSemana;
     private String nmDiaSemana;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt_BR")
     private LocalDate dtApartamentoVigente;
     private String nmHorarioVistoria;
     private Integer idStatusVistoria;
     private String nmStatusVistoria;
     private boolean inMarcarRevistoria;
     private String txObservacaoRevistoria;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt_BR")
     private LocalDate dtRevistoriaVigente;
-    private Integer nrTotalRegistros;
 
     public static ApartamentoVistoriaDto converterToDomain(ApartamentoVistoria apartamentoVistoria ) {
         return ApartamentoVistoriaDto.builder()

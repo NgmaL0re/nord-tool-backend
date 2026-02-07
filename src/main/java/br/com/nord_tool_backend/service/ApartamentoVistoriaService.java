@@ -2,6 +2,7 @@ package br.com.nord_tool_backend.service;
 
 import br.com.nord_tool_backend.dto.ApartamentoVistoriaDto;
 import br.com.nord_tool_backend.dto.ApartamentoVistoriaFiltroDto;
+import br.com.nord_tool_backend.dto.InfoGeralApartamentoVistoriaDto;
 import br.com.nord_tool_backend.form.ApartamentoVistoriaForm;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,4 +17,6 @@ public interface ApartamentoVistoriaService {
     void importarPlanilha(MultipartFile planilha) throws Exception;
     List<ApartamentoVistoriaDto> listarApartamentoVistoriaFiltrado(ApartamentoVistoriaFiltroDto apartamentoVistoriaFiltroDto,
                                                                    String filtraTodos, int nrPagina, int nrQuantidadePorPagina, String nmOrdenacao);
+    List<InfoGeralApartamentoVistoriaDto> listarInfoGeralApartamentoVistoria(String dtiApartamentoVistoria, String dtfApartamentoVistoria);
+
 }

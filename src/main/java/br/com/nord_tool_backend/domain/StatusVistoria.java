@@ -18,6 +18,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StatusVistoria extends GlobalDomain implements Serializable {
+    private static final long serialVersionUID = 7722981426712179965L;
+
     private Long id;
     private String nmStatusVistoria;
 }

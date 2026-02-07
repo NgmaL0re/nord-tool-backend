@@ -2,7 +2,7 @@ package br.com.nord_tool_backend.repository.impl;
 
 import br.com.nord_tool_backend.controller.response.NordHttpEnum;
 import br.com.nord_tool_backend.domain.ApartamentoVistoria;
-import br.com.nord_tool_backend.domain.DiaSemana;
+import br.com.nord_tool_backend.domain.InfoGeralApartamentoVistoria;
 import br.com.nord_tool_backend.dto.ApartamentoVistoriaDto;
 import br.com.nord_tool_backend.dto.ApartamentoVistoriaFiltroDto;
 import br.com.nord_tool_backend.excepetion.ValidacaoException;
@@ -20,6 +20,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.Types;
 import java.util.List;
 
+import static br.com.nord_tool_backend.utils.StringUtils.parseDataPermitida;
+
 @Repository
 @Slf4j
 @PropertySource("classpath:query/apartamento-vistoria.properties")
@@ -32,28 +34,31 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
     private static final String ERRO_GENERICO_LISTAR = "Erro ao listar apartamentos";
 
     @Value("${SPI.APARTAMENTO_VISTORIA}")
-    private String querySalvarApartamentoVistoria;
+    private String querySalvaApartamentoVistoria;
 
     @Value("${SPU.APARTAMENTO_VISTORIA}")
-    private String queryAlterarApartamentoVistoria;
+    private String queryAlteraApartamentoVistoria;
 
     @Value("${SPD.APARTAMENTO_VISTORIA.WHERE.ID}")
-    private String queryDeletarApartamentoVistoria;
+    private String queryDeletaApartamentoVistoria;
 
     @Value("${SPS.BUSCAR.APARTAMENTO_VISTORIA}")
-    private String queryBuscarApartamentoVistoria;
+    private String queryBuscaApartamentoVistoria;
 
     @Value("${SPS.LISTAR.APARTAMENTO_VISTORIA}")
-    private String queryListarApartamentoVistoria;
+    private String queryListaApartamentoVistoria;
 
     @Value("${SPS.APARTAMENTO_VISTORIA_PAGINACAO}")
     private String queryPaginacao;
+
+    @Value("${SPS.LISTAR.INFO_GERAL_APARTAMENTO_VISTORIA}")
+    private String queryListaInfoGeralApartamentoVistoria;
 
     @Override
     public ApartamentoVistoriaDto salvarApartamentoVistoria(ApartamentoVistoria apartamentoVistoria) {
         try {
             log.info("Salvando na base de dados um Apartamento Vistoria");
-            ApartamentoVistoria apartamentoVistoriaSalvar = salvar(querySalvarApartamentoVistoria, apartamentoVistoria, "id_apartamento_vistoria");
+            ApartamentoVistoria apartamentoVistoriaSalvar = salvar(querySalvaApartamentoVistoria, apartamentoVistoria, "id_apartamento_vistoria");
             return ApartamentoVistoriaDto.converterToDomain(apartamentoVistoriaSalvar);
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));
@@ -65,7 +70,7 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
     public ApartamentoVistoriaDto alterarApartamentoVistoria(ApartamentoVistoria apartamentoVistoria) {
         try {
             log.info("Alterando na base de dados um Apartamento Vistoria");
-            ApartamentoVistoria apartamentoVistoriaAlterar = alterar(queryAlterarApartamentoVistoria, apartamentoVistoria);
+            ApartamentoVistoria apartamentoVistoriaAlterar = alterar(queryAlteraApartamentoVistoria, apartamentoVistoria);
             return ApartamentoVistoriaDto.converterToDomain(apartamentoVistoriaAlterar);
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));
@@ -78,7 +83,7 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         try {
             log.info("Apagando na base de dados um Apartamento Vistoria");
-            deletar(queryDeletarApartamentoVistoria, params);
+            deletar(queryDeletaApartamentoVistoria, params);
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));
             throw new ValidacaoException(NordHttpEnum.HTTP_400, StringUtils.getMensagem(ERRO_GENERICO_DELETAR), ex.getMessage());
@@ -90,7 +95,7 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         try {
             log.info("Buscando na base de dados um Apartamento Vistoria");
-            return buscarPorId(queryBuscarApartamentoVistoria, params, BeanPropertyRowMapper.newInstance(ApartamentoVistoria.class));
+            return buscarPorId(queryBuscaApartamentoVistoria, params, BeanPropertyRowMapper.newInstance(ApartamentoVistoria.class));
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));
             throw new ValidacaoException(NordHttpEnum.HTTP_400, StringUtils.getMensagem(ERRO_GENERICO_BUSCAR), ex.getMessage());
@@ -101,7 +106,7 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
     public List<ApartamentoVistoria> listarApartamentoVistoria() {
         try {
             log.info("Listando na base de dados Apartamentos Vistoria");
-            return buscarTodos(queryListarApartamentoVistoria, BeanPropertyRowMapper.newInstance(ApartamentoVistoria.class));
+            return buscarTodos(queryListaApartamentoVistoria, BeanPropertyRowMapper.newInstance(ApartamentoVistoria.class));
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));
             throw new ValidacaoException(NordHttpEnum.HTTP_400, StringUtils.getMensagem(ERRO_GENERICO_LISTAR), ex.getMessage());
@@ -112,7 +117,7 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
     public void salvarEmLote(List<ApartamentoVistoria> lsApartamentoVistoria) {
         try {
             log.info("Salvando dados da planilha de apartamentos em lote na base de dados");
-            salvarTodos(querySalvarApartamentoVistoria, lsApartamentoVistoria);
+            salvarTodos(querySalvaApartamentoVistoria, lsApartamentoVistoria);
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));
             throw new ValidacaoException(NordHttpEnum.HTTP_400, StringUtils.getMensagem(ERRO_GENERICO_SALVAR), ex.getMessage());
@@ -128,11 +133,11 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
         }
         mapSqlParameterSource.addValue("nmApartamentoVistoria", apartamentoVistoriaFiltroDto.getNmApartamentoVistoria(), Types.VARCHAR);
         mapSqlParameterSource.addValue("nmDiaSemana", apartamentoVistoriaFiltroDto.getNmDiaSemana(), Types.VARCHAR);
-        mapSqlParameterSource.addValue("dtApartamentoVigente", apartamentoVistoriaFiltroDto.getDtApartamentoVigente(), Types.DATE);
+        mapSqlParameterSource.addValue("dtApartamentoVigente", parseDataPermitida(apartamentoVistoriaFiltroDto.getDtApartamentoVigente()), Types.DATE);
         mapSqlParameterSource.addValue("nmHorarioVistoria", apartamentoVistoriaFiltroDto.getNmHorarioVistoria(), Types.VARCHAR);
         mapSqlParameterSource.addValue("nmStatusVistoria", apartamentoVistoriaFiltroDto.getNmStatusVistoria(), Types.VARCHAR);
         mapSqlParameterSource.addValue("txObservacaoRevistoria", apartamentoVistoriaFiltroDto.getTxObservacaoRevistoria(), Types.VARCHAR);
-        mapSqlParameterSource.addValue("dtRevistoriaVigente", apartamentoVistoriaFiltroDto.getDtRevistoriaVigente(), Types.DATE);
+        mapSqlParameterSource.addValue("dtRevistoriaVigente", parseDataPermitida(apartamentoVistoriaFiltroDto.getDtRevistoriaVigente()), Types.DATE);
 
         mapSqlParameterSource.addValue("nrPagina", nrPagina * nrQuantidadePorPagina);
         mapSqlParameterSource.addValue("nrQuantidadePorPagina", nrQuantidadePorPagina);
@@ -141,6 +146,22 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
         try {
             log.info("Listando da base de dados os Apartamentos Vistoria filtrados");
             return buscarTodosPorFiltro(sql, mapSqlParameterSource, BeanPropertyRowMapper.newInstance(ApartamentoVistoriaDto.class));
+        } catch (Exception ex) {
+            log.error(ExceptionUtils.getMessage(ex));
+            throw new ValidacaoException(NordHttpEnum.HTTP_400, StringUtils.getMensagem(ERRO_GENERICO_LISTAR), ex.getMessage());
+        }
+    }
+
+    @Override
+    public List<InfoGeralApartamentoVistoria> listarInfoGeralApartamentoVistoria(String dtiApartamentoVistoriaFiltro, String dtfApartamentoVistoriaFiltro) {
+        try {
+            MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+
+            log.info("Listando na base de dados informações gerais dos Apartamentos");
+            mapSqlParameterSource.addValue("dtiApartamentoVistoriaFiltro", parseDataPermitida(dtiApartamentoVistoriaFiltro), Types.DATE);
+            mapSqlParameterSource.addValue("dtfApartamentoVistoriaFiltro", parseDataPermitida(dtfApartamentoVistoriaFiltro), Types.DATE);
+
+            return buscarTodosPorFiltro(queryListaInfoGeralApartamentoVistoria, mapSqlParameterSource, BeanPropertyRowMapper.newInstance(InfoGeralApartamentoVistoria.class));
         } catch (Exception ex) {
             log.error(ExceptionUtils.getMessage(ex));
             throw new ValidacaoException(NordHttpEnum.HTTP_400, StringUtils.getMensagem(ERRO_GENERICO_LISTAR), ex.getMessage());

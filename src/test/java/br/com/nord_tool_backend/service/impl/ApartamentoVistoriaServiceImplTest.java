@@ -1,11 +1,14 @@
 package br.com.nord_tool_backend.service.impl;
 
 import br.com.nord_tool_backend.domain.ApartamentoVistoria;
+import br.com.nord_tool_backend.domain.InfoGeralApartamentoVistoria;
 import br.com.nord_tool_backend.dto.ApartamentoVistoriaDto;
 import br.com.nord_tool_backend.dto.ApartamentoVistoriaFiltroDto;
+import br.com.nord_tool_backend.dto.InfoGeralApartamentoVistoriaDto;
 import br.com.nord_tool_backend.form.ApartamentoVistoriaForm;
 import br.com.nord_tool_backend.repository.ApartamentoVistoriaRepository;
 import br.com.nord_tool_backend.service.ApartamentoVistoriaService;
+import br.com.nord_tool_backend.service.CacheService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,8 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
 public class ApartamentoVistoriaServiceImplTest {
@@ -38,12 +43,18 @@ public class ApartamentoVistoriaServiceImplTest {
     @Mock
     private Environment env;
 
+    @Mock
+    private CacheService cacheService;
+
     ApartamentoVistoria apartamentoVistoria = new ApartamentoVistoria();
     ApartamentoVistoriaDto apartamentoVistoriaDto = new ApartamentoVistoriaDto();
     List<ApartamentoVistoriaDto> lsApartamentoVistoriaDto = new ArrayList<>();
     List<ApartamentoVistoria> lsApartamentoVistoria = new ArrayList<>();
     ApartamentoVistoriaForm apartamentoVistoriaForm = new ApartamentoVistoriaForm();
     ApartamentoVistoriaFiltroDto apartamentoVistoriaFiltroDto = new ApartamentoVistoriaFiltroDto();
+
+    List<InfoGeralApartamentoVistoria> lsInfoGeralApartamentoVistoria = new ArrayList<>();
+    List<InfoGeralApartamentoVistoriaDto> lsInfoGeralApartamentoVistoriaDto = new ArrayList<>();
 
 
     @BeforeEach
@@ -118,12 +129,26 @@ public class ApartamentoVistoriaServiceImplTest {
         apartamentoVistoriaFiltroDto = ApartamentoVistoriaFiltroDto.builder()
                 .nmApartamentoVistoria("nmApartamentoVistoria")
                 .nmDiaSemana("nmDiaSemana")
-                .dtApartamentoVigente(LocalDate.now())
+                .dtApartamentoVigente("DataFiltrada")
                 .nmHorarioVistoria("nmHorarioVistoria")
                 .nmStatusVistoria("nmStatusVistoria")
                 .txObservacaoRevistoria("txObservacaoRevistoria")
-                .dtRevistoriaVigente(LocalDate.now())
+                .dtRevistoriaVigente("DataFiltrada")
                 .build();
+
+        lsInfoGeralApartamentoVistoria.add(InfoGeralApartamentoVistoria.builder()
+                .nmStatusVistoria("Liberado")
+                .qtApartamentoStatusVistoria(30)
+                .pcApartamentoStatusVistoria(20.0)
+                .nrTotalRegistros(2000)
+                .build());
+
+        lsInfoGeralApartamentoVistoriaDto.add(InfoGeralApartamentoVistoriaDto.builder()
+                .nmStatusVistoria("Liberado")
+                .qtApartamentoStatusVistoria(30)
+                .pcApartamentoStatusVistoria(20.0)
+                .nrTotalRegistros(2000)
+                .build());
     }
 
     @Test
@@ -132,6 +157,7 @@ public class ApartamentoVistoriaServiceImplTest {
         ApartamentoVistoriaDto result = apartamentoVistoriaService.salvarApartamentoVistoria(apartamentoVistoriaForm);
         assertEquals(apartamentoVistoriaDto, result);
         verify(apartamentoVistoriaRepository).salvarApartamentoVistoria(any(ApartamentoVistoria.class));
+        verify(cacheService, Mockito.times(1)).limparTodos();
     }
 
     @Test
@@ -140,6 +166,7 @@ public class ApartamentoVistoriaServiceImplTest {
         ApartamentoVistoriaDto result = apartamentoVistoriaService.alterarApartamentoVistoria(apartamentoVistoriaForm);
         assertEquals(apartamentoVistoriaDto, result);
         verify(apartamentoVistoriaRepository).alterarApartamentoVistoria(any(ApartamentoVistoria.class));
+        verify(cacheService, Mockito.times(1)).limparTodos();
     }
 
     @Test
@@ -147,6 +174,7 @@ public class ApartamentoVistoriaServiceImplTest {
         doNothing().when(apartamentoVistoriaRepository).deletarApartamentoVistoria(Mockito.anyLong());
         apartamentoVistoriaService.deletarApartamentoVistoria(Mockito.anyLong());
         verify(apartamentoVistoriaRepository, Mockito.times(1)).deletarApartamentoVistoria(Mockito.anyLong());
+        verify(cacheService, Mockito.times(1)).limparTodos();
     }
 
     @Test
@@ -170,6 +198,7 @@ public class ApartamentoVistoriaServiceImplTest {
         MockMultipartFile planilhaFile =  new MockMultipartFile("arquivo", "aquivo.xlsx", MediaType.MULTIPART_FORM_DATA_VALUE, inputStream);
         apartamentoVistoriaService.importarPlanilha(planilhaFile);
         verify(apartamentoVistoriaRepository, Mockito.times(1)).salvarEmLote(Mockito.anyList());
+        verify(cacheService, Mockito.times(1)).limparTodos();
     }
 
     @Test
@@ -202,8 +231,7 @@ public class ApartamentoVistoriaServiceImplTest {
 
         apartamentoVistoriaService.listarApartamentoVistoriaFiltrado(apartamentoVistoriaFiltroDto, filtraTodos, nrPagina, nrQuantidadePorPagina, nmOrdem);
         verify(apartamentoVistoriaRepository, Mockito.times(1))
-                .listarApartamentoVistoriaFiltrado(Mockito.anyString(), Mockito.eq(apartamentoVistoriaFiltroDto), Mockito.eq(filtraTodos), Mockito.eq(nrPagina), Mockito.eq(nrQuantidadePorPagina)
-                );
+                .listarApartamentoVistoriaFiltrado(Mockito.anyString(), Mockito.eq(apartamentoVistoriaFiltroDto), Mockito.eq(filtraTodos), Mockito.eq(nrPagina), Mockito.eq(nrQuantidadePorPagina));
     }
 
     @Test
@@ -219,7 +247,17 @@ public class ApartamentoVistoriaServiceImplTest {
 
         apartamentoVistoriaService.listarApartamentoVistoriaFiltrado(apartamentoVistoriaFiltroDto, filtraTodos, nrPagina, nrQuantidadePorPagina, nmOrdem);
         verify(apartamentoVistoriaRepository, Mockito.times(1))
-                .listarApartamentoVistoriaFiltrado(Mockito.anyString(), Mockito.eq(apartamentoVistoriaFiltroDto), Mockito.eq(filtraTodos), Mockito.eq(nrPagina), Mockito.eq(nrQuantidadePorPagina)
-                );
+                .listarApartamentoVistoriaFiltrado(Mockito.anyString(), Mockito.eq(apartamentoVistoriaFiltroDto), Mockito.eq(filtraTodos), Mockito.eq(nrPagina), Mockito.eq(nrQuantidadePorPagina));
+    }
+
+    @Test
+    void deveBuscarTodasInfoGeralApartamentoVistoria() {
+        String dtInicio = "DataInicioFiltrada";
+        String dtFim = "DataFimFiltrada";
+
+        when(apartamentoVistoriaRepository.listarInfoGeralApartamentoVistoria(dtInicio,dtFim)).thenReturn((lsInfoGeralApartamentoVistoria));
+        List<InfoGeralApartamentoVistoriaDto> lsInfoGeralApartamentoVistoriaDtoTest = apartamentoVistoriaService.listarInfoGeralApartamentoVistoria(dtInicio,dtFim);
+        assertEquals(lsInfoGeralApartamentoVistoriaDto, lsInfoGeralApartamentoVistoriaDtoTest);
+        verify(apartamentoVistoriaRepository, Mockito.times(1)).listarInfoGeralApartamentoVistoria(Mockito.eq(dtInicio), Mockito.eq(dtFim));
     }
 }

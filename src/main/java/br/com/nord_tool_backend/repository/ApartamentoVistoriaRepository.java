@@ -1,9 +1,11 @@
 package br.com.nord_tool_backend.repository;
 
 import br.com.nord_tool_backend.domain.ApartamentoVistoria;
+import br.com.nord_tool_backend.domain.InfoGeralApartamentoVistoria;
 import br.com.nord_tool_backend.dto.ApartamentoVistoriaDto;
 import br.com.nord_tool_backend.dto.ApartamentoVistoriaFiltroDto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ApartamentoVistoriaRepository {
@@ -15,4 +17,5 @@ public interface ApartamentoVistoriaRepository {
     void salvarEmLote(List<ApartamentoVistoria> lsApartamentoVistoria);
     List<ApartamentoVistoriaDto> listarApartamentoVistoriaFiltrado(String query, ApartamentoVistoriaFiltroDto apartamentoVistoriaFiltroDto,
                                                                    String filtrarTodos, int nrPagina, int nrQuantidadePorPagina);
+    List<InfoGeralApartamentoVistoria> listarInfoGeralApartamentoVistoria(String dtiApartamentoVistoriaFiltro, String dtfApartamentoVistoriaFiltro);
 }

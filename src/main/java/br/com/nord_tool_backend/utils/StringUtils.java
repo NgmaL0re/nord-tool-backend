@@ -95,4 +95,22 @@ public class StringUtils {
                 .filter(c -> Set.of("1","sim","s","true","yes","y").contains(c))
                 .isPresent();
     }
+
+    public static LocalDate parseDataPermitida(String data) {
+        if (data == null || data.isBlank()) {
+            return null;
+        }
+        List<DateTimeFormatter> formatosPermitidos = List.of(
+                DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+                DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        );
+
+        for (DateTimeFormatter formatter : formatosPermitidos) {
+            try {
+                return LocalDate.parse(data, formatter);
+            } catch (DateTimeParseException ignored) {
+            }
+        }
+        throw new IllegalArgumentException("Formato de data inválido. Use dd/MM/yyyy ou dd-MM-yyyy");
+    }
 }

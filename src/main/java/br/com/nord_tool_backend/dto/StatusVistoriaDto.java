@@ -7,14 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class StatusVistoriaDto implements Serializable {
+public class StatusVistoriaDto {
     private Long idStatusVistoria;
     private String nmStatusVistoria;
 

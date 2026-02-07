@@ -13,6 +13,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class DiaSemana extends GlobalDomain implements Serializable {
 
+    private static final long serialVersionUID = -3238490796551071555L;
+
     private Long id;
     private String nmDiaSemana;
 }

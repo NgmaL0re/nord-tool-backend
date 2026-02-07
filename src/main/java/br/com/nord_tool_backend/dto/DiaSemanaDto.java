@@ -7,15 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-
-
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class DiaSemanaDto implements Serializable {
+public class DiaSemanaDto{
 
     private Long idDiaSemana;
     private String nmDiaSemana;

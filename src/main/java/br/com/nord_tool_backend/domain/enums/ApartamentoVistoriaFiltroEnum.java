@@ -6,8 +6,8 @@ import java.util.stream.Stream;
 
 @AllArgsConstructor
 public enum ApartamentoVistoriaFiltroEnum {
-    QUERY_TODOS( "SPS.LISTAR.APARTAMENTO_VISTORIA_FILTRAR_TODOS"),
-    QUERY_WHERE( "SPS.LISTAR.APARTAMENTO_VISTORIA_FILTRAR_ATRIBUTO");
+    QUERY_TODOS( "SPS.LISTAR.APARTAMENTO_VISTORIA_FILTRA_TODOS"),
+    QUERY_WHERE( "SPS.LISTAR.APARTAMENTO_VISTORIA_FILTRA_ATRIBUTO");
     private static final String STANDARD_ORDER = " ORDER BY id_apartamento_vistoria DESC ";
     private String queryProperty;
 

@@ -1,4 +1,4 @@
-package br.com.nord_tool_backend.controller;
+package br.com.nord_tool_backend.controller.read;
 
 import br.com.nord_tool_backend.dto.HealthDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/nord-tool")
 @Tag(name = "Health", description = "Endpoint Health")
-public class HealthController {
+public class HealthReadController {
 
     @GetMapping("/health")
     @Operation(summary = "Testa se aplicação está funcionando normalmente")

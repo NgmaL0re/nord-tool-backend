@@ -1,8 +1,6 @@
 package br.com.nord_tool_backend.service.impl;
 
-import br.com.nord_tool_backend.domain.DiaSemana;
 import br.com.nord_tool_backend.domain.StatusVistoria;
-import br.com.nord_tool_backend.dto.DiaSemanaDto;
 import br.com.nord_tool_backend.dto.StatusVistoriaDto;
 import br.com.nord_tool_backend.repository.StatusVistoriaRepository;
 import br.com.nord_tool_backend.service.StatusVistoriaService;

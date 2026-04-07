@@ -16,7 +16,9 @@ public enum StatusVistoriaEnum {
     LIBERADO(3, "Liberado"),
     APROVADO(4, "Aprovado"),
     REPROVADO(5, "Reprovado"),
-    PENDENTE(6, "Pendente");
+    PENDENTE(6, "Pendente"),
+    PENDENTE_DAT(7, "Pendente DAT"),
+    APROVADO_DAT(8, "Aprovado DAT");
 
     private final Integer id;
     private final String nmStatusVistoria;

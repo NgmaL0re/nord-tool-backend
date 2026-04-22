@@ -16,7 +16,7 @@ spring:
 
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
-      minimum-idle: 1 # Colocar 5 quando for para PRD
+      minimum-idle: 1
       maximum-pool-size: 30 # Maximo de conexoes abertas
       idle-timeout: 300000 # Maximo que uma conexao pode ficar ociosa esperando o tempo de fechar
       max-lifetime: 1200000 # Tempo máximo de vida de uma conexão.

@@ -2,7 +2,6 @@ package br.com.nord_tool_backend.service.impl;
 
 import br.com.nord_tool_backend.service.CacheService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;

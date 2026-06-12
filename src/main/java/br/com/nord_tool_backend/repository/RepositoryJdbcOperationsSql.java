@@ -52,4 +52,7 @@ public abstract class RepositoryJdbcOperationsSql<T extends GlobalDomain> {
     protected<T> List<T> buscarTodosPorFiltro(String sql, MapSqlParameterSource params, BeanPropertyRowMapper<T> mapper) {
         return namedParameterJdbcTemplate.query(sql, params, mapper);
     }
+    protected List<Integer> buscarIntegers(String sql, MapSqlParameterSource params) {
+        return namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getInt("nrVersao"));
+    }
 }

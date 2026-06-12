@@ -6,6 +6,7 @@ import br.com.nord_tool_backend.dto.ApartamentoVistoriaDto;
 import br.com.nord_tool_backend.dto.ApartamentoVistoriaFiltroDto;
 import br.com.nord_tool_backend.dto.InfoGeralApartamentoVistoriaDto;
 import br.com.nord_tool_backend.form.ApartamentoVistoriaForm;
+import br.com.nord_tool_backend.repository.ApartamentoVistoriaHistoricoRepository;
 import br.com.nord_tool_backend.repository.ApartamentoVistoriaRepository;
 import br.com.nord_tool_backend.service.ApartamentoVistoriaService;
 import br.com.nord_tool_backend.service.CacheService;
@@ -26,10 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ApartamentoVistoriaServiceImplTest {
@@ -39,6 +39,9 @@ public class ApartamentoVistoriaServiceImplTest {
 
     @Mock
     private ApartamentoVistoriaRepository apartamentoVistoriaRepository;
+
+    @Mock
+    private ApartamentoVistoriaHistoricoRepository apartamentoVistoriaHistoricoRepository;
 
     @Mock
     private Environment env;
@@ -67,7 +70,7 @@ public class ApartamentoVistoriaServiceImplTest {
                 .dtApartamentoVigente(LocalDate.now())
                 .nmHorarioVistoria("nmHorarioVistoria")
                 .idStatusVistoria(1)
-                .nmStatusVistoria("nmStatusVistoria")
+                .nmStatusVistoria("Pendente")
                 .inMarcarRevistoria(true)
                 .txObservacaoRevistoria("txObservacaoRevistoria")
                 .dtRevistoriaVigente(LocalDate.now())
@@ -114,6 +117,7 @@ public class ApartamentoVistoriaServiceImplTest {
                 .build());
 
         apartamentoVistoriaForm = ApartamentoVistoriaForm.builder()
+                .idApartamentoVistoria(1L)
                 .nmApartamentoVistoria("nmApartamentoVistoria")
                 .idDiaSemana(1)
                 .nmDiaSemana("nmDiaSemana")
@@ -157,48 +161,53 @@ public class ApartamentoVistoriaServiceImplTest {
         ApartamentoVistoriaDto result = apartamentoVistoriaService.salvarApartamentoVistoria(apartamentoVistoriaForm);
         assertEquals(apartamentoVistoriaDto, result);
         verify(apartamentoVistoriaRepository).salvarApartamentoVistoria(any(ApartamentoVistoria.class));
-        verify(cacheService, Mockito.times(1)).limparTodos();
+        verify(cacheService, times(1)).limparTodos();
     }
 
     @Test
     void deveAlterarApartamentoVistoria() {
+        when(apartamentoVistoriaRepository.buscarApartamentoVistoria(anyLong())).thenReturn(apartamentoVistoria);
+        when(apartamentoVistoriaHistoricoRepository.buscarNrVersaoHistorico(anyLong())).thenReturn(List.of(1));
         when(apartamentoVistoriaRepository.alterarApartamentoVistoria(any(ApartamentoVistoria.class))).thenReturn(apartamentoVistoriaDto);
         ApartamentoVistoriaDto result = apartamentoVistoriaService.alterarApartamentoVistoria(apartamentoVistoriaForm);
         assertEquals(apartamentoVistoriaDto, result);
+        verify(apartamentoVistoriaRepository).buscarApartamentoVistoria(anyLong());
+        verify(apartamentoVistoriaHistoricoRepository).buscarNrVersaoHistorico(anyLong());
+        verify(apartamentoVistoriaHistoricoRepository).salvarTodosHistoricos(anyList());
         verify(apartamentoVistoriaRepository).alterarApartamentoVistoria(any(ApartamentoVistoria.class));
-        verify(cacheService, Mockito.times(1)).limparTodos();
+        verify(cacheService, times(1)).limparTodos();
     }
 
     @Test
     void deveDeletarApartamentoVistoria(){
-        doNothing().when(apartamentoVistoriaRepository).deletarApartamentoVistoria(Mockito.anyLong());
-        apartamentoVistoriaService.deletarApartamentoVistoria(Mockito.anyLong());
-        verify(apartamentoVistoriaRepository, Mockito.times(1)).deletarApartamentoVistoria(Mockito.anyLong());
-        verify(cacheService, Mockito.times(1)).limparTodos();
+        doNothing().when(apartamentoVistoriaRepository).deletarApartamentoVistoria(anyLong());
+        apartamentoVistoriaService.deletarApartamentoVistoria(anyLong());
+        verify(apartamentoVistoriaRepository, times(1)).deletarApartamentoVistoria(anyLong());
+        verify(cacheService, times(1)).limparTodos();
     }
 
     @Test
     void deveRetornarUmApartamentoVistoria(){
-        when(apartamentoVistoriaRepository.buscarApartamentoVistoria(Mockito.anyLong())).thenReturn(apartamentoVistoria);
-        apartamentoVistoriaService.buscarApartamentoVistoria(Mockito.anyLong());
-        verify(apartamentoVistoriaRepository, Mockito.times(1)).buscarApartamentoVistoria(Mockito.anyLong());
+        when(apartamentoVistoriaRepository.buscarApartamentoVistoria(anyLong())).thenReturn(apartamentoVistoria);
+        apartamentoVistoriaService.buscarApartamentoVistoria(anyLong());
+        verify(apartamentoVistoriaRepository, times(1)).buscarApartamentoVistoria(anyLong());
     }
 
     @Test
     void deveRetornarUmaListaApartamentoVistoria(){
         when(apartamentoVistoriaRepository.listarApartamentoVistoria()).thenReturn(lsApartamentoVistoria);
         apartamentoVistoriaService.listarApartamentoVistoria();
-        verify(apartamentoVistoriaRepository, Mockito.times(1)).listarApartamentoVistoria();
+        verify(apartamentoVistoriaRepository, times(1)).listarApartamentoVistoria();
     }
 
     @Test
     void deveImportarApartamentoVistoria() throws Exception {
-        doNothing().when(apartamentoVistoriaRepository).salvarEmLote(Mockito.anyList());
+        doNothing().when(apartamentoVistoriaRepository).salvarEmLote(anyList());
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("apartamento-modelo.xlsx");
         MockMultipartFile planilhaFile =  new MockMultipartFile("arquivo", "aquivo.xlsx", MediaType.MULTIPART_FORM_DATA_VALUE, inputStream);
         apartamentoVistoriaService.importarPlanilha(planilhaFile);
-        verify(apartamentoVistoriaRepository, Mockito.times(1)).salvarEmLote(Mockito.anyList());
-        verify(cacheService, Mockito.times(1)).limparTodos();
+        verify(apartamentoVistoriaRepository, times(1)).salvarEmLote(anyList());
+        verify(cacheService, times(1)).limparTodos();
     }
 
     @Test
@@ -213,7 +222,7 @@ public class ApartamentoVistoriaServiceImplTest {
                 .thenReturn(lsApartamentoVistoriaDto);
 
         apartamentoVistoriaService.listarApartamentoVistoriaFiltrado(apartamentoVistoriaFiltroDto, filtraTodos, nrPagina, nrQuantidadePorPagina, nmOrdem);
-        verify(apartamentoVistoriaRepository, Mockito.times(1))
+        verify(apartamentoVistoriaRepository, times(1))
                 .listarApartamentoVistoriaFiltrado(Mockito.anyString(), Mockito.eq(apartamentoVistoriaFiltroDto), Mockito.eq(filtraTodos), Mockito.eq(nrPagina), Mockito.eq(nrQuantidadePorPagina)
         );
     }
@@ -230,7 +239,7 @@ public class ApartamentoVistoriaServiceImplTest {
                 .thenReturn(lsApartamentoVistoriaDto);
 
         apartamentoVistoriaService.listarApartamentoVistoriaFiltrado(apartamentoVistoriaFiltroDto, filtraTodos, nrPagina, nrQuantidadePorPagina, nmOrdem);
-        verify(apartamentoVistoriaRepository, Mockito.times(1))
+        verify(apartamentoVistoriaRepository, times(1))
                 .listarApartamentoVistoriaFiltrado(Mockito.anyString(), Mockito.eq(apartamentoVistoriaFiltroDto), Mockito.eq(filtraTodos), Mockito.eq(nrPagina), Mockito.eq(nrQuantidadePorPagina));
     }
 
@@ -246,7 +255,7 @@ public class ApartamentoVistoriaServiceImplTest {
                 .thenReturn(lsApartamentoVistoriaDto);
 
         apartamentoVistoriaService.listarApartamentoVistoriaFiltrado(apartamentoVistoriaFiltroDto, filtraTodos, nrPagina, nrQuantidadePorPagina, nmOrdem);
-        verify(apartamentoVistoriaRepository, Mockito.times(1))
+        verify(apartamentoVistoriaRepository, times(1))
                 .listarApartamentoVistoriaFiltrado(Mockito.anyString(), Mockito.eq(apartamentoVistoriaFiltroDto), Mockito.eq(filtraTodos), Mockito.eq(nrPagina), Mockito.eq(nrQuantidadePorPagina));
     }
 
@@ -258,6 +267,6 @@ public class ApartamentoVistoriaServiceImplTest {
         when(apartamentoVistoriaRepository.listarInfoGeralApartamentoVistoria(dtInicio,dtFim)).thenReturn((lsInfoGeralApartamentoVistoria));
         List<InfoGeralApartamentoVistoriaDto> lsInfoGeralApartamentoVistoriaDtoTest = apartamentoVistoriaService.listarInfoGeralApartamentoVistoria(dtInicio,dtFim);
         assertEquals(lsInfoGeralApartamentoVistoriaDto, lsInfoGeralApartamentoVistoriaDtoTest);
-        verify(apartamentoVistoriaRepository, Mockito.times(1)).listarInfoGeralApartamentoVistoria(Mockito.eq(dtInicio), Mockito.eq(dtFim));
+        verify(apartamentoVistoriaRepository, times(1)).listarInfoGeralApartamentoVistoria(Mockito.eq(dtInicio), Mockito.eq(dtFim));
     }
 }

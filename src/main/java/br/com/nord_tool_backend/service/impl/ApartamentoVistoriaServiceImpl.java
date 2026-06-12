@@ -1,6 +1,8 @@
 package br.com.nord_tool_backend.service.impl;
 
+import br.com.nord_tool_backend.builder.ApartamentoVistoriaHistoricoBuilder;
 import br.com.nord_tool_backend.domain.ApartamentoVistoria;
+import br.com.nord_tool_backend.domain.ApartamentoVistoriaHistorico;
 import br.com.nord_tool_backend.domain.InfoGeralApartamentoVistoria;
 import br.com.nord_tool_backend.domain.enums.ApartamentoVistoriaFiltroEnum;
 import br.com.nord_tool_backend.dto.ApartamentoVistoriaDto;
@@ -8,6 +10,7 @@ import br.com.nord_tool_backend.dto.ApartamentoVistoriaFiltroDto;
 import br.com.nord_tool_backend.dto.InfoGeralApartamentoVistoriaDto;
 import br.com.nord_tool_backend.form.ApartamentoVistoriaForm;
 import br.com.nord_tool_backend.handler.XlsxExtractorHandlerApartamento;
+import br.com.nord_tool_backend.repository.ApartamentoVistoriaHistoricoRepository;
 import br.com.nord_tool_backend.repository.ApartamentoVistoriaRepository;
 import br.com.nord_tool_backend.service.ApartamentoVistoriaService;
 import br.com.nord_tool_backend.service.CacheService;
@@ -37,6 +40,9 @@ public class ApartamentoVistoriaServiceImpl extends XlsxExtractorHandlerApartame
     @Autowired
     private CacheService cacheService;
 
+    @Autowired
+    private ApartamentoVistoriaHistoricoRepository apartamentoVistoriaHistoricoRepository;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ApartamentoVistoriaDto salvarApartamentoVistoria(ApartamentoVistoriaForm apartamentoVistoriaForm){
@@ -53,8 +59,13 @@ public class ApartamentoVistoriaServiceImpl extends XlsxExtractorHandlerApartame
     @Transactional(rollbackFor = Exception.class)
     public ApartamentoVistoriaDto alterarApartamentoVistoria(ApartamentoVistoriaForm apartamentoVistoriaForm) {
         log.info("Iniciando método para alterar um Apartamento Vistoria");
-        ApartamentoVistoria apartamentoVistoria = apartamentoVistoriaForm.converterToDomain();
-        ApartamentoVistoriaDto apartamentoVistoriaDto = apartamentoVistoriaRepository.alterarApartamentoVistoria(apartamentoVistoria);
+        ApartamentoVistoria apartamentoVistoriaAtual = apartamentoVistoriaForm.converterToDomain();
+        log.info("Iniciando método para gerar historia dos Apartamentos");
+        ApartamentoVistoria ApartamentoVistoriaAnterior = apartamentoVistoriaRepository.buscarApartamentoVistoria(apartamentoVistoriaAtual.getId());
+        List<Integer> lsNrVersaoHistorico = apartamentoVistoriaHistoricoRepository.buscarNrVersaoHistorico(apartamentoVistoriaAtual.getId());
+        List<ApartamentoVistoriaHistorico> lsApVistoriaHistorico = ApartamentoVistoriaHistoricoBuilder.gerarHistorico(ApartamentoVistoriaAnterior, apartamentoVistoriaAtual, lsNrVersaoHistorico);
+        apartamentoVistoriaHistoricoRepository.salvarTodosHistoricos(lsApVistoriaHistorico);
+        ApartamentoVistoriaDto apartamentoVistoriaDto = apartamentoVistoriaRepository.alterarApartamentoVistoria(apartamentoVistoriaAtual);
         log.info("Iniciando método limpar o cache após alterar");
         cacheService.limparTodos();
         log.info("Finalizando método que altera um Apartamento Vistoria");
@@ -100,7 +111,6 @@ public class ApartamentoVistoriaServiceImpl extends XlsxExtractorHandlerApartame
     }
 
     @Override
-    @Cacheable("apartamentoVistoriaFiltro")
     public List<ApartamentoVistoriaDto> listarApartamentoVistoriaFiltrado(ApartamentoVistoriaFiltroDto apartamentoVistoriaFiltroDto, String filtraTodos, int nrPagina, int nrQuantidadePorPagina, String nmOrdenacao) {
         log.info("Iniciando método para filtrar listas de Apartamentos");
         nmOrdenacao = (nmOrdenacao == null) ? "" : nmOrdenacao;

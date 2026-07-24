@@ -92,7 +92,7 @@ public class ApartamentoVistoriaServiceImpl extends XlsxExtractorHandlerApartame
     }
 
     @Override
-    @Cacheable("apartamentoVistoriaDto")
+    //@Cacheable("apartamentoVistoriaDto")
     public List<ApartamentoVistoriaDto> listarApartamentoVistoria() {
         log.info("Iniciando método para listar Apartamentos Vistoria");
         List<ApartamentoVistoria> lsApartamentoVistoria = apartamentoVistoriaRepository.listarApartamentoVistoria();

@@ -12,5 +12,5 @@ WORKDIR /app
 COPY --from=build /build/target/*.jar app.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java","-Xms256m","-Xmx512m","-XX:+UseG1GC","-jar","app.jar"
+ENTRYPOINT ["java", "-Xms256m", "-Xmx512m", "-XX:+UseG1GC", "-jar", "app.jar"]
 ]

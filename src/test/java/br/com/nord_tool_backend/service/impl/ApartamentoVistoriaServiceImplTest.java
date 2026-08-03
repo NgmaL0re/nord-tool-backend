@@ -120,7 +120,6 @@ public class ApartamentoVistoriaServiceImplTest {
                 .idApartamentoVistoria(1L)
                 .nmApartamentoVistoria("nmApartamentoVistoria")
                 .idDiaSemana(1)
-                .nmDiaSemana("nmDiaSemana")
                 .dtApartamentoVigente(LocalDate.now())
                 .nmHorarioVistoria("nmHorarioVistoria")
                 .idStatusVistoria(1)

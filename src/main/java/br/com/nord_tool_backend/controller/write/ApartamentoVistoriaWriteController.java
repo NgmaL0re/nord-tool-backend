@@ -24,7 +24,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/nord-tool/apartamentoVistoria")
-@Tag(name = "Apartamento Vistoria", description = "Endpoints para listar, buscar e manipular os apartamentos retornados")
+@Tag(name = "Apartamento Vistoria", description = "Endpoints para criar, manipular e deletar os apartamentos retornados")
 public class ApartamentoVistoriaWriteController implements BaseResponse {
 
     private final ApartamentoVistoriaService apartamentoVistoriaService;

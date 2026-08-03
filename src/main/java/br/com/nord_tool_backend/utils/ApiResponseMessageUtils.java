@@ -1,6 +1,6 @@
 package br.com.nord_tool_backend.utils;
 
-public class ApiResponseMessage {
+public class ApiResponseMessageUtils {
     public static final String RESPONSE_200 = StringUtils.getMensagem("Conteúdo retornado com sucesso");
     public static final String RESPONSE_201 = StringUtils.getMensagem("Conteúdo criado com sucesso");
     public static final String RESPONSE_204 = StringUtils.getMensagem("Conteúdo feito com sucesso, mas não retornou");

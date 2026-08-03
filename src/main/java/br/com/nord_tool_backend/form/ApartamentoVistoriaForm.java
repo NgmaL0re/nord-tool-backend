@@ -17,7 +17,6 @@ public class ApartamentoVistoriaForm {
     private Long idApartamentoVistoria;
     private String nmApartamentoVistoria;
     private Integer idDiaSemana;
-    private String nmDiaSemana;
     private LocalDate dtApartamentoVigente;
     private String nmHorarioVistoria;
     private Integer idStatusVistoria;
@@ -31,7 +30,6 @@ public class ApartamentoVistoriaForm {
                 .id(idApartamentoVistoria)
                 .nmApartamentoVistoria(nmApartamentoVistoria)
                 .idDiaSemana(idDiaSemana)
-                .nmDiaSemana(nmDiaSemana)
                 .dtApartamentoVigente(dtApartamentoVigente)
                 .nmHorarioVistoria(nmHorarioVistoria)
                 .idStatusVistoria(idStatusVistoria)

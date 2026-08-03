@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/nord-tool/apartamentoVistoria")
-@Tag(name = "Apartamento Vistoria", description = "Endpoints para listar, buscar e manipular os apartamentos retornados")
+@Tag(name = "Apartamento Vistoria", description = "Endpoints para listar e listar apartamentos retornados")
 public class ApartamentoVistoriaReadController implements BaseResponse {
 
     private final ApartamentoVistoriaService apartamentoVistoriaService;

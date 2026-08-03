@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApartamentoVistoriaFiltroDto {
+    private Long idApartamentoVistoria;
     private String nmApartamentoVistoria;
     private String nmDiaSemana;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt_BR")

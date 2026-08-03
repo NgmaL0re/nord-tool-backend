@@ -139,7 +139,7 @@ public class ApartamentoVistoriaRepositoryImpl extends RepositoryJdbcOperationsS
         mapSqlParameterSource.addValue("txObservacaoRevistoria", apartamentoVistoriaFiltroDto.getTxObservacaoRevistoria(), Types.VARCHAR);
         mapSqlParameterSource.addValue("dtRevistoriaVigente", parseDataPermitida(apartamentoVistoriaFiltroDto.getDtRevistoriaVigente()), Types.DATE);
 
-        mapSqlParameterSource.addValue("nrPagina", nrPagina * nrQuantidadePorPagina);
+        mapSqlParameterSource.addValue("nrPagina", nrPagina);
         mapSqlParameterSource.addValue("nrQuantidadePorPagina", nrQuantidadePorPagina);
 
         String sql = query + queryPaginacao;

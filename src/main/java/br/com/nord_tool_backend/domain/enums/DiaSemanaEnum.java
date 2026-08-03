@@ -15,7 +15,8 @@ public enum DiaSemanaEnum {
     QUARTA_FEIRA(3, "Quarta-Feira"),
     QUINTA_FEIRA(4, "Quinta-Feira"),
     SEXTA_FEIRA(5, "Sexta-Feira"),
-    SEM_AGENDAMENTO(6, "Sem agendamento");
+    SEM_AGENDAMENTO(6, "Sem agendamento"),
+    SABADO(7, "Sábado");
 
     private final Integer id;
     private final String nmDiaSemana;

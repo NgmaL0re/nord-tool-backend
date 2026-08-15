@@ -10,7 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 
@@ -37,6 +40,8 @@ public class ColaboradorRepositoryImpl extends RepositoryJdbcOperationsSql<Colab
         try {
             Colaborador salvo = salvar(querySalvar, colaborador, "id_user");
             return ColaboradorDto.converterToDomain(buscarPorIdInterno(salvo.getId()));
+        } catch (DataIntegrityViolationException ex) {
+            throw referenciasInvalidas();
         } catch (Exception ex) {
             throw tratarErro(ERRO_SALVAR, ex);
         }
@@ -45,8 +50,14 @@ public class ColaboradorRepositoryImpl extends RepositoryJdbcOperationsSql<Colab
     @Override
     public ColaboradorDto alterarColaborador(Colaborador colaborador) {
         try {
-            alterar(queryAlterar, colaborador);
+            int linhasAfetadas = namedParameterJdbcTemplate.update(
+                    queryAlterar, new BeanPropertySqlParameterSource(colaborador));
+            validarRegistroEncontrado(linhasAfetadas, colaborador.getId());
             return ColaboradorDto.converterToDomain(buscarPorIdInterno(colaborador.getId()));
+        } catch (EmptyResultDataAccessException ex) {
+            throw colaboradorNaoEncontrado(colaborador.getId());
+        } catch (DataIntegrityViolationException ex) {
+            throw referenciasInvalidas();
         } catch (Exception ex) {
             throw tratarErro(ERRO_ALTERAR, ex);
         }
@@ -55,7 +66,13 @@ public class ColaboradorRepositoryImpl extends RepositoryJdbcOperationsSql<Colab
     @Override
     public void deletarColaborador(Long id) {
         try {
-            deletar(queryDeletar, new MapSqlParameterSource("id", id));
+            int linhasAfetadas = deletar(queryDeletar, new MapSqlParameterSource("id", id));
+            validarRegistroEncontrado(linhasAfetadas, id);
+        } catch (EmptyResultDataAccessException ex) {
+            throw colaboradorNaoEncontrado(id);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ValidacaoException(NordHttpEnum.HTTP_400,
+                    "Colaborador possui registros vinculados", null);
         } catch (Exception ex) {
             throw tratarErro(ERRO_DELETAR, ex);
         }
@@ -65,6 +82,8 @@ public class ColaboradorRepositoryImpl extends RepositoryJdbcOperationsSql<Colab
     public Colaborador buscarPorIdColaborador(Long id) {
         try {
             return buscarPorIdInterno(id);
+        } catch (EmptyResultDataAccessException ex) {
+            throw colaboradorNaoEncontrado(id);
         } catch (Exception ex) {
             throw tratarErro(ERRO_BUSCAR, ex);
         }
@@ -84,8 +103,24 @@ public class ColaboradorRepositoryImpl extends RepositoryJdbcOperationsSql<Colab
                 BeanPropertyRowMapper.newInstance(Colaborador.class));
     }
 
+    private void validarRegistroEncontrado(int linhasAfetadas, Long id) {
+        if (linhasAfetadas == 0) {
+            throw new EmptyResultDataAccessException("Colaborador não encontrado: " + id, 1);
+        }
+    }
+
+    private ValidacaoException colaboradorNaoEncontrado(Long id) {
+        return new ValidacaoException(NordHttpEnum.HTTP_404,
+                "Colaborador não encontrado", String.valueOf(id));
+    }
+
+    private ValidacaoException referenciasInvalidas() {
+        return new ValidacaoException(NordHttpEnum.HTTP_400,
+                "Empresa, cargo ou permissão inválidos", null);
+    }
+
     private ValidacaoException tratarErro(String mensagem, Exception ex) {
         log.error(mensagem, ex);
-        return new ValidacaoException(NordHttpEnum.HTTP_400, mensagem, ExceptionUtils.getMessage(ex));
+        return new ValidacaoException(NordHttpEnum.HTTP_500, mensagem, ExceptionUtils.getMessage(ex));
     }
 }

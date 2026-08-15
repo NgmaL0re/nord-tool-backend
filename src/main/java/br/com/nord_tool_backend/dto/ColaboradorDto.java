@@ -14,11 +14,11 @@ public class ColaboradorDto {
     private Long id;
     private String nome;
     private String celular;
-    private Integer idEmpresa;
+    private Long idEmpresa;
     private String nomeEmpresa;
-    private Integer idCargo;
+    private Long idCargo;
     private String nomeCargo;
-    private Integer idPermissao;
+    private Long idPermissao;
     private String nomePermissao;
 
     public static ColaboradorDto converterToDomain(Colaborador colaborador) {

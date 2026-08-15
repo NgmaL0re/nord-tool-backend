@@ -35,10 +35,10 @@ class ColaboradorControllerTest {
         readController = new ColaboradorReadController(service);
         writeController = new ColaboradorWriteController(service);
         dto = ColaboradorDto.builder().id(1L).nome("João Silva").celular("11999999999")
-                .idEmpresa(1).nomeEmpresa("Empresa").idCargo(1).nomeCargo("Cargo")
-                .idPermissao(1).nomePermissao("Permissão").build();
+                .idEmpresa(1L).nomeEmpresa("Empresa").idCargo(1L).nomeCargo("Cargo")
+                .idPermissao(1L).nomePermissao("Permissão").build();
         form = ColaboradorForm.builder().nome("João Silva").celular("11999999999")
-                .idEmpresa(1).idCargo(1).idPermissao(1).build();
+                .idEmpresa(1L).idCargo(1L).idPermissao(1L).build();
     }
 
     @Test

@@ -50,9 +50,9 @@ class ColaboradorFormTest {
         return ColaboradorForm.builder()
                 .nome("João Silva")
                 .celular("11999999999")
-                .idEmpresa(1)
-                .idCargo(1)
-                .idPermissao(1)
+                .idEmpresa(1L)
+                .idCargo(1L)
+                .idPermissao(1L)
                 .build();
     }
 }

@@ -34,15 +34,15 @@ class ColaboradorServiceImplTest {
         form = ColaboradorForm.builder()
                 .nome("João Silva")
                 .celular("11999999999")
-                .idEmpresa(1)
-                .idCargo(2)
-                .idPermissao(3)
+                .idEmpresa(1L)
+                .idCargo(2L)
+                .idPermissao(3L)
                 .build();
         colaborador = Colaborador.builder()
                 .id(10L).nome("João Silva").celular("11999999999")
-                .idEmpresa(1).nomeEmpresa("Empresa")
-                .idCargo(2).nomeCargo("Cargo")
-                .idPermissao(3).nomePermissao("Permissão").build();
+                .idEmpresa(1L).nomeEmpresa("Empresa")
+                .idCargo(2L).nomeCargo("Cargo")
+                .idPermissao(3L).nomePermissao("Permissão").build();
         dto = ColaboradorDto.converterToDomain(colaborador);
     }
 

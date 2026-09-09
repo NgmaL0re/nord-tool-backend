@@ -25,13 +25,13 @@ public class ColaboradorForm {
     private String celular;
 
     @NotNull(message = "Empresa é obrigatória")
-    private Integer idEmpresa;
+    private Long idEmpresa;
 
     @NotNull(message = "Cargo é obrigatório")
-    private Integer idCargo;
+    private Long idCargo;
 
     @NotNull(message = "Permissão é obrigatória")
-    private Integer idPermissao;
+    private Long idPermissao;
 
     public Colaborador converterToDomain(Long id) {
         return Colaborador.builder()
